@@ -1,0 +1,1 @@
+# jetpack-compose-intellij-splash-screen
