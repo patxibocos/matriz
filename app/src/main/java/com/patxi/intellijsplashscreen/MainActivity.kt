@@ -43,22 +43,35 @@ sealed class Cell {
 sealed class Sizing {
     abstract fun calculateGriData(canvasSize: Size): GridData
     class Rows(private val rows: Int) : Sizing() {
+        init {
+            require(rows > 0)
+        }
+
         override fun calculateGriData(canvasSize: Size): GridData {
-            val cellSize = canvasSize.height / rows
-            val columns = (canvasSize.width / cellSize).toInt()
+            val cellSize = min(canvasSize.width, canvasSize.height / rows)
+            val columns = (canvasSize.width / cellSize).toInt() // 1080 / 1920 = 0
             return GridData(rows = rows, columns = columns, cellSize = cellSize)
         }
     }
 
     class Columns(private val columns: Int) : Sizing() {
+        init {
+            require(columns > 0)
+        }
+
         override fun calculateGriData(canvasSize: Size): GridData {
-            val cellSize = canvasSize.width / columns
+            val cellSize = min(canvasSize.height, canvasSize.width / columns)
             val rows = (canvasSize.height / cellSize).toInt()
             return GridData(rows = rows, columns = columns, cellSize = cellSize)
         }
     }
 
     class RowsAndColumns(private val rows: Int, private val columns: Int) : Sizing() {
+        init {
+            require(rows > 0)
+            require(columns > 0)
+        }
+
         override fun calculateGriData(canvasSize: Size): GridData =
             GridData(
                 rows = rows,
@@ -71,6 +84,10 @@ sealed class Sizing {
     }
 
     class CellSize(private val size: Float) : Sizing() {
+        init {
+            require(size > 0)
+        }
+
         override fun calculateGriData(canvasSize: Size): GridData =
             GridData(
                 rows = (canvasSize.height / size).toInt(),
@@ -169,7 +186,7 @@ fun CellSizePreview() {
 fun RowsPreview() {
     ColorGrid(
         modifier = Modifier.fillMaxSize(),
-        sizing = Sizing.Rows(13),
+        sizing = Sizing.Rows(2),
         colors = cellColors
     )
 }
@@ -179,7 +196,7 @@ fun RowsPreview() {
 fun ColumnsPreview() {
     ColorGrid(
         modifier = Modifier.fillMaxSize(),
-        sizing = Sizing.Columns(6),
+        sizing = Sizing.Columns(1),
         colors = cellColors
     )
 }
