@@ -7,12 +7,15 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.plus
 import kotlin.math.min
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +24,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             Surface(color = Color(0xFF514B4B)) {
                 ColorGrid(
-                    modifier = Modifier.fillMaxSize(),
                     sizing = Sizing.RowsAndColumns(rows = 15, columns = 8),
-                    cellColors
+                    colors = cellColors,
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 )
             }
         }
@@ -41,15 +45,15 @@ sealed class Cell {
 }
 
 sealed class Sizing {
-    abstract fun calculateGriData(canvasSize: Size): GridData
+    abstract fun calculateGridData(canvasSize: Size): GridData
     class Rows(private val rows: Int) : Sizing() {
         init {
             require(rows > 0)
         }
 
-        override fun calculateGriData(canvasSize: Size): GridData {
+        override fun calculateGridData(canvasSize: Size): GridData {
             val cellSize = min(canvasSize.width, canvasSize.height / rows)
-            val columns = (canvasSize.width / cellSize).toInt() // 1080 / 1920 = 0
+            val columns = (canvasSize.width / cellSize).toInt()
             return GridData(rows = rows, columns = columns, cellSize = cellSize)
         }
     }
@@ -59,7 +63,7 @@ sealed class Sizing {
             require(columns > 0)
         }
 
-        override fun calculateGriData(canvasSize: Size): GridData {
+        override fun calculateGridData(canvasSize: Size): GridData {
             val cellSize = min(canvasSize.height, canvasSize.width / columns)
             val rows = (canvasSize.height / cellSize).toInt()
             return GridData(rows = rows, columns = columns, cellSize = cellSize)
@@ -72,7 +76,7 @@ sealed class Sizing {
             require(columns > 0)
         }
 
-        override fun calculateGriData(canvasSize: Size): GridData =
+        override fun calculateGridData(canvasSize: Size): GridData =
             GridData(
                 rows = rows,
                 columns = columns,
@@ -88,7 +92,7 @@ sealed class Sizing {
             require(size > 0)
         }
 
-        override fun calculateGriData(canvasSize: Size): GridData =
+        override fun calculateGridData(canvasSize: Size): GridData =
             GridData(
                 rows = (canvasSize.height / size).toInt(),
                 columns = (canvasSize.width / size).toInt(),
@@ -113,30 +117,33 @@ val cellColors = listOf(
 
 class GridData(val rows: Int, val columns: Int, val cellSize: Float)
 
-@Composable
-fun ColorGrid(modifier: Modifier = Modifier, sizing: Sizing, colors: List<Color>) {
-    ColorGrid(
-        modifier = modifier,
-        gridDataCalculator = sizing::calculateGriData,
-        colors = colors
-    )
-}
+fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
 
 @Composable
-private fun ColorGrid(
-    modifier: Modifier,
-    gridDataCalculator: (canvasSize: Size) -> GridData,
-    colors: List<Color>
+fun ColorGrid(
+    sizing: Sizing,
+    colors: List<Color>,
+    modifier: Modifier = Modifier,
+    contentAlignment: Alignment = Alignment.Center,
 ) {
     Canvas(modifier = modifier) {
-        val gridData = gridDataCalculator(size)
+        size
+        val gridData = sizing.calculateGridData(size)
+        val alignOffset = contentAlignment.align(
+            Size(
+                gridData.columns * gridData.cellSize,
+                gridData.rows * gridData.cellSize
+            ).toIntSize(), size.toIntSize(), layoutDirection
+        )
         for (row in 0 until gridData.rows) {
             for (column in 0 until gridData.columns) {
                 drawCell(
                     cell = cellTypes.random(),
                     color = colors.random(),
                     size = gridData.cellSize,
-                    offset = Offset(column * gridData.cellSize, row * gridData.cellSize)
+                    offset = Offset(column * gridData.cellSize, row * gridData.cellSize).plus(
+                        alignOffset
+                    )
                 )
             }
         }
@@ -165,9 +172,9 @@ fun DrawScope.drawCell(cell: Cell, color: Color, size: Float, offset: Offset) {
 @Preview
 fun RowsAndColumnsPreview() {
     ColorGrid(
-        modifier = Modifier.fillMaxSize(),
         sizing = Sizing.RowsAndColumns(rows = 13, columns = 6),
-        colors = cellColors
+        colors = cellColors,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
@@ -175,9 +182,9 @@ fun RowsAndColumnsPreview() {
 @Preview
 fun CellSizePreview() {
     ColorGrid(
-        modifier = Modifier.fillMaxSize(),
         sizing = Sizing.CellSize(180f),
-        colors = cellColors
+        colors = cellColors,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
@@ -185,9 +192,9 @@ fun CellSizePreview() {
 @Preview
 fun RowsPreview() {
     ColorGrid(
-        modifier = Modifier.fillMaxSize(),
         sizing = Sizing.Rows(2),
-        colors = cellColors
+        colors = cellColors,
+        modifier = Modifier.fillMaxSize(),
     )
 }
 
@@ -195,8 +202,8 @@ fun RowsPreview() {
 @Preview
 fun ColumnsPreview() {
     ColorGrid(
-        modifier = Modifier.fillMaxSize(),
         sizing = Sizing.Columns(1),
-        colors = cellColors
+        colors = cellColors,
+        modifier = Modifier.fillMaxSize(),
     )
 }
