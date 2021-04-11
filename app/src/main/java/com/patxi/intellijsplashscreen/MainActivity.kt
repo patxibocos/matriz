@@ -23,11 +23,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Surface(color = Color(0xFF514B4B)) {
-                ColorGrid(
+                IntelliJSplashScreen(
                     sizing = Sizing.RowsAndColumns(rows = 15, columns = 8),
-                    colors = cellColors,
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -45,16 +43,16 @@ sealed class Cell {
 }
 
 sealed class Sizing {
-    abstract fun calculateGridData(canvasSize: Size): GridData
+    abstract fun calculateCanvasData(canvasSize: Size): CanvasData
     class Rows(private val rows: Int) : Sizing() {
         init {
             require(rows > 0)
         }
 
-        override fun calculateGridData(canvasSize: Size): GridData {
+        override fun calculateCanvasData(canvasSize: Size): CanvasData {
             val cellSize = min(canvasSize.width, canvasSize.height / rows)
             val columns = (canvasSize.width / cellSize).toInt()
-            return GridData(rows = rows, columns = columns, cellSize = cellSize)
+            return CanvasData(rows = rows, columns = columns, cellSize = cellSize)
         }
     }
 
@@ -63,10 +61,10 @@ sealed class Sizing {
             require(columns > 0)
         }
 
-        override fun calculateGridData(canvasSize: Size): GridData {
+        override fun calculateCanvasData(canvasSize: Size): CanvasData {
             val cellSize = min(canvasSize.height, canvasSize.width / columns)
             val rows = (canvasSize.height / cellSize).toInt()
-            return GridData(rows = rows, columns = columns, cellSize = cellSize)
+            return CanvasData(rows = rows, columns = columns, cellSize = cellSize)
         }
     }
 
@@ -76,8 +74,8 @@ sealed class Sizing {
             require(columns > 0)
         }
 
-        override fun calculateGridData(canvasSize: Size): GridData =
-            GridData(
+        override fun calculateCanvasData(canvasSize: Size): CanvasData =
+            CanvasData(
                 rows = rows,
                 columns = columns,
                 cellSize = min(
@@ -92,8 +90,8 @@ sealed class Sizing {
             require(size > 0)
         }
 
-        override fun calculateGridData(canvasSize: Size): GridData =
-            GridData(
+        override fun calculateCanvasData(canvasSize: Size): CanvasData =
+            CanvasData(
                 rows = (canvasSize.height / size).toInt(),
                 columns = (canvasSize.width / size).toInt(),
                 cellSize = size
@@ -115,95 +113,88 @@ val cellColors = listOf(
     Color(0xFFFF0058)
 )
 
-class GridData(val rows: Int, val columns: Int, val cellSize: Float)
+class CanvasData(val rows: Int, val columns: Int, val cellSize: Float)
 
 fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
 
 @Composable
-fun ColorGrid(
+fun SquaredCanvas(
     sizing: Sizing,
-    colors: List<Color>,
+    draw: DrawScope.(rowAndColumn: Pair<Int, Int>, cellSize: Float, offset: Offset) -> Unit,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
 ) {
     Canvas(modifier = modifier) {
-        size
-        val gridData = sizing.calculateGridData(size)
+        val canvasData = sizing.calculateCanvasData(size)
         val alignOffset = contentAlignment.align(
             Size(
-                gridData.columns * gridData.cellSize,
-                gridData.rows * gridData.cellSize
+                canvasData.columns * canvasData.cellSize,
+                canvasData.rows * canvasData.cellSize
             ).toIntSize(), size.toIntSize(), layoutDirection
         )
-        for (row in 0 until gridData.rows) {
-            for (column in 0 until gridData.columns) {
-                drawCell(
-                    cell = cellTypes.random(),
-                    color = colors.random(),
-                    size = gridData.cellSize,
-                    offset = Offset(column * gridData.cellSize, row * gridData.cellSize).plus(
-                        alignOffset
-                    )
-                )
+        for (row in 0 until canvasData.rows) {
+            for (column in 0 until canvasData.columns) {
+                val offset =
+                    Offset(
+                        column * canvasData.cellSize,
+                        row * canvasData.cellSize
+                    ).plus(alignOffset)
+                draw(row to column, canvasData.cellSize, offset)
             }
         }
     }
 }
 
-fun DrawScope.drawCell(cell: Cell, color: Color, size: Float, offset: Offset) {
+fun DrawScope.drawIntelliJCell(cellSize: Float, offset: Offset) {
+    val cell = cellTypes.random()
+    val color = cellColors.random()
     when (cell) {
         is Cell.Circle -> drawCircle(
             color = color,
-            radius = size / 2,
-            center = offset.plus(Offset(size / 2, size / 2))
+            radius = cellSize / 2,
+            center = offset.plus(Offset(cellSize / 2, cellSize / 2))
         )
         is Cell.Quadrant -> drawArc(
             color = color,
             startAngle = cell.startAngle,
             sweepAngle = 90f,
             useCenter = true,
-            topLeft = offset + cell.topLeftOffset(size),
-            size = Size(size * 2, size * 2)
+            topLeft = offset + cell.topLeftOffset(cellSize),
+            size = Size(cellSize * 2, cellSize * 2)
         )
     }
 }
 
 @Composable
-@Preview
-fun RowsAndColumnsPreview() {
-    ColorGrid(
-        sizing = Sizing.RowsAndColumns(rows = 13, columns = 6),
-        colors = cellColors,
-        modifier = Modifier.fillMaxSize(),
+fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier = Modifier) {
+    SquaredCanvas(
+        sizing = sizing,
+        draw = { _, cellSize, offset ->
+            drawIntelliJCell(cellSize, offset)
+        },
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
     )
 }
 
 @Composable
 @Preview
-fun CellSizePreview() {
-    ColorGrid(
-        sizing = Sizing.CellSize(180f),
-        colors = cellColors,
-        modifier = Modifier.fillMaxSize(),
-    )
-}
+fun RowsAndColumnsPreview() = IntelliJSplashScreen(
+    sizing = Sizing.RowsAndColumns(rows = 13, columns = 6),
+    modifier = Modifier.fillMaxSize()
+)
 
 @Composable
 @Preview
-fun RowsPreview() {
-    ColorGrid(
-        sizing = Sizing.Rows(2),
-        colors = cellColors,
-        modifier = Modifier.fillMaxSize(),
-    )
-}
+fun CellSizePreview() =
+    IntelliJSplashScreen(sizing = Sizing.CellSize(180f), modifier = Modifier.fillMaxSize())
 
 @Composable
 @Preview
-fun ColumnsPreview() {
-    ColorGrid(
-        sizing = Sizing.Columns(1),
-        colors = cellColors,
-        modifier = Modifier.fillMaxSize(),
-    )
-}
+fun RowsPreview() =
+    IntelliJSplashScreen(sizing = Sizing.Rows(2), modifier = Modifier.fillMaxSize())
+
+@Composable
+@Preview
+fun ColumnsPreview() =
+    IntelliJSplashScreen(sizing = Sizing.Columns(1), modifier = Modifier.fillMaxSize())
