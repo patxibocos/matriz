@@ -30,12 +30,12 @@ class MainActivity : ComponentActivity() {
 
 sealed class IntelliJCell {
     object Circle : IntelliJCell()
-    sealed class Quadrant(val startAngle: Float, val topLeftOffset: (Size) -> Offset) :
+    sealed class Quadrant(val startAngle: Float, val topLeftOffset: Offset) :
         IntelliJCell() {
-        object TopLeft : Quadrant(180f, { Offset.Zero })
-        object TopRight : Quadrant(270f, { -Offset(it.width, 0f) })
-        object BottomLeft : Quadrant(90f, { -Offset(0f, it.height) })
-        object BottomRight : Quadrant(0f, { -Offset(it.width, it.height) })
+        object TopLeft : Quadrant(180f, Offset.Zero)
+        object TopRight : Quadrant(270f, -Offset(1f, 0f))
+        object BottomLeft : Quadrant(90f, -Offset(0f, 1f))
+        object BottomRight : Quadrant(0f, -Offset(1f, 1f))
     }
 }
 
@@ -67,8 +67,13 @@ fun DrawScope.drawIntelliJCell(cellSize: Size, offset: Offset) {
             startAngle = cell.startAngle,
             sweepAngle = 90f,
             useCenter = true,
-            topLeft = offset + cell.topLeftOffset(cellSize),
-            size = Size(cellSize.width * 2, cellSize.height * 2)
+            topLeft = offset.plus(
+                Offset(
+                    cell.topLeftOffset.x * cellSize.width,
+                    cell.topLeftOffset.y * cellSize.height
+                )
+            ),
+            size = Size(cellSize.width, cellSize.height).times(2f)
         )
     }
 }
@@ -86,11 +91,12 @@ fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier = Modifier) {
 }
 
 @Composable
-@Preview
-fun RowsAndColumnsPreview() = IntelliJSplashScreen(
-    sizing = Sizing.RowsAndColumns(rows = 13, columns = 6),
-    modifier = Modifier.fillMaxSize()
-)
+@Preview(widthDp = 1280, heightDp = 800)
+fun RowsAndColumnsPreview() =
+    IntelliJSplashScreen(
+        sizing = Sizing.RowsAndColumns(rows = 8, columns = 13),
+        modifier = Modifier.fillMaxSize()
+    )
 
 @Composable
 @Preview
