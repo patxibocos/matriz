@@ -4,11 +4,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.plus
 import kotlin.math.min
 
 class CanvasData(val rows: Int, val columns: Int, val cellSize: Size)
@@ -97,7 +96,7 @@ sealed class Sizing {
 @Composable
 fun GridCanvas(
     sizing: Sizing,
-    onDrawCell: DrawScope.(rowAndColumnIndex: Pair<Int, Int>, cellSize: Size, offset: Offset) -> Unit,
+    onDrawCell: DrawScope.(rowAndColumnIndex: Pair<Int, Int>, cellSize: Size) -> Unit,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
 ) {
@@ -111,14 +110,16 @@ fun GridCanvas(
                 canvasData.rows * canvasData.cellSize.height
             ).toIntSize(), size.toIntSize(), layoutDirection
         )
-        for (row in 0 until canvasData.rows) {
-            for (column in 0 until canvasData.columns) {
-                val offset =
-                    Offset(
-                        column * canvasData.cellSize.width,
-                        row * canvasData.cellSize.height
-                    ).plus(alignOffset)
-                onDrawCell(row to column, canvasData.cellSize, offset)
+        translate(alignOffset.x.toFloat(), alignOffset.y.toFloat()) {
+            for (row in 0 until canvasData.rows) {
+                for (column in 0 until canvasData.columns) {
+                    translate(
+                        left = column * canvasData.cellSize.width,
+                        top = row * canvasData.cellSize.height
+                    ) {
+                        onDrawCell(row to column, canvasData.cellSize)
+                    }
+                }
             }
         }
     }

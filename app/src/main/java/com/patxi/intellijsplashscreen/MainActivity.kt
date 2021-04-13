@@ -53,25 +53,22 @@ val cellColors = listOf(
     Color(0xFFFF0058)
 )
 
-fun DrawScope.drawIntelliJCell(cellSize: Size, offset: Offset) {
+fun DrawScope.drawIntelliJCell(cellSize: Size) {
     val cell = cellTypes.random()
     val color = cellColors.random()
     when (cell) {
         is IntelliJCell.Circle -> drawOval(
             color = color,
-            size = cellSize,
-            topLeft = offset
+            size = cellSize
         )
         is IntelliJCell.Quadrant -> drawArc(
             color = color,
             startAngle = cell.startAngle,
             sweepAngle = 90f,
             useCenter = true,
-            topLeft = offset.plus(
-                Offset(
-                    cell.topLeftOffset.x * cellSize.width,
-                    cell.topLeftOffset.y * cellSize.height
-                )
+            topLeft = Offset(
+                cell.topLeftOffset.x * cellSize.width,
+                cell.topLeftOffset.y * cellSize.height
             ),
             size = Size(cellSize.width, cellSize.height).times(2f)
         )
@@ -82,8 +79,8 @@ fun DrawScope.drawIntelliJCell(cellSize: Size, offset: Offset) {
 fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier = Modifier) {
     GridCanvas(
         sizing = sizing,
-        onDrawCell = { _, cellSize, offset ->
-            drawIntelliJCell(cellSize, offset)
+        onDrawCell = { _, cellSize ->
+            drawIntelliJCell(cellSize)
         },
         modifier = modifier,
         contentAlignment = Alignment.Center,
@@ -122,10 +119,9 @@ fun ColumnsPreview() =
 fun CirclesPreview() {
     GridCanvas(
         sizing = Sizing.RowsAndColumns(26, 6, sizeRatio = 2f),
-        onDrawCell = { (row, column), cellSize, offset ->
+        onDrawCell = { (row, column), cellSize ->
             drawOval(
                 color = Color.Magenta,
-                topLeft = offset,
                 size = Size(cellSize.width * (1 + column) / 6, cellSize.height * (1 + row) / 26)
             )
         },
