@@ -18,6 +18,7 @@ sealed class Sizing {
     class Rows(private val rows: Int, private val sizeRatio: Float = 1f) : Sizing() {
         init {
             require(rows > 0)
+            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size): CanvasData {
@@ -34,6 +35,7 @@ sealed class Sizing {
     class Columns(private val columns: Int, private val sizeRatio: Float = 1f) : Sizing() {
         init {
             require(columns > 0)
+            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size): CanvasData {
@@ -55,6 +57,7 @@ sealed class Sizing {
         init {
             require(rows > 0)
             require(columns > 0)
+            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size): CanvasData {
@@ -96,8 +99,8 @@ sealed class Sizing {
 @Composable
 fun GridCanvas(
     sizing: Sizing,
-    onDrawCell: DrawScope.(rowAndColumnIndex: Pair<Int, Int>, cellSize: Size) -> Unit,
-    modifier: Modifier = Modifier,
+    onDrawCell: DrawScope.(row: Int, column: Int, size: Size) -> Unit,
+    modifier: Modifier,
     contentAlignment: Alignment = Alignment.Center,
 ) {
     fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
@@ -117,7 +120,7 @@ fun GridCanvas(
                         left = column * canvasData.cellSize.width,
                         top = row * canvasData.cellSize.height
                     ) {
-                        onDrawCell(row to column, canvasData.cellSize)
+                        onDrawCell(row, column, canvasData.cellSize)
                     }
                 }
             }

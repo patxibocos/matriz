@@ -76,10 +76,10 @@ fun DrawScope.drawIntelliJCell(cellSize: Size) {
 }
 
 @Composable
-fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier = Modifier) {
+fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier) {
     GridCanvas(
         sizing = sizing,
-        onDrawCell = { _, cellSize ->
+        onDrawCell = { _, _, cellSize ->
             drawIntelliJCell(cellSize)
         },
         modifier = modifier,
@@ -119,7 +119,7 @@ fun ColumnsPreview() =
 fun CirclesPreview() {
     GridCanvas(
         sizing = Sizing.RowsAndColumns(26, 6, sizeRatio = 2f),
-        onDrawCell = { (row, column), cellSize ->
+        onDrawCell = { row, column, cellSize ->
             drawOval(
                 color = Color.Magenta,
                 size = Size(cellSize.width * (1 + column) / 6, cellSize.height * (1 + row) / 26)
