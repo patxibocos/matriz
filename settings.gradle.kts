@@ -3,9 +3,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        maven(url = "https://kotlin.bintray.com/kotlinx")
     }
 }
 rootProject.name = "IntelliJ Splash Screen"
 include(":app")
+
+enableFeaturePreview("VERSION_CATALOGS")
  

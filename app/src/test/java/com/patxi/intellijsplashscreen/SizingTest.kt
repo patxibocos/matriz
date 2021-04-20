@@ -40,7 +40,7 @@ class SizingTest : StringSpec({
     "Rows" {
         checkAll(Arb.positiveInts(), sizeArb) { rows, canvasSize ->
             val canvasData = Sizing.Rows(rows).calculateCanvasData(canvasSize)
-            canvasData.rows shouldBe rows
+            canvasData.rows shouldBeExactly rows
             canvasData.cellSize.height * canvasData.rows shouldBeCloseTo canvasSize.height
         }
     }
@@ -48,7 +48,7 @@ class SizingTest : StringSpec({
     "Columns" {
         checkAll(Arb.positiveInts(), sizeArb) { columns, canvasSize ->
             val canvasData = Sizing.Columns(columns).calculateCanvasData(canvasSize)
-            canvasData.columns shouldBe columns
+            canvasData.columns shouldBeExactly columns
             canvasData.cellSize.width * canvasData.columns shouldBeCloseTo canvasSize.width
         }
     }
@@ -56,7 +56,7 @@ class SizingTest : StringSpec({
     "RowsAndColumns" {
         checkAll(Arb.positiveInts(), Arb.positiveInts(), sizeArb) { rows, columns, canvasSize ->
             val canvasData = Sizing.RowsAndColumns(rows, columns).calculateCanvasData(canvasSize)
-            canvasData.rows shouldBe rows
+            canvasData.rows shouldBeExactly rows
             canvasData.columns shouldBeExactly columns
             canvasData should matchWidthOrHeight(canvasSize)
         }
