@@ -111,7 +111,8 @@ fun GridCanvas(
             Size(
                 canvasData.columns * canvasData.cellSize.width,
                 canvasData.rows * canvasData.cellSize.height
-            ).toIntSize(), size.toIntSize(), layoutDirection
+            ).toIntSize(),
+            size.toIntSize(), layoutDirection
         )
         translate(alignOffset.x.toFloat(), alignOffset.y.toFloat()) {
             for (row in 0 until canvasData.rows) {

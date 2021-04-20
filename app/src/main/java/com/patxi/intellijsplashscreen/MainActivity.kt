@@ -113,7 +113,6 @@ fun RowsPreview() =
 fun ColumnsPreview() =
     IntelliJSplashScreen(sizing = Sizing.Columns(6), modifier = Modifier.fillMaxSize())
 
-
 @Composable
 @Preview
 fun CirclesPreview() {

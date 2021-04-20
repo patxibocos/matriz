@@ -25,8 +25,8 @@ private const val tolerance = .1f
 private fun matchWidthOrHeight(matchSize: Size) = object : Matcher<CanvasData> {
     override fun test(value: CanvasData): MatcherResult {
         return MatcherResult(
-            abs(value.cellSize.width * value.columns - matchSize.width) <= tolerance
-                    || abs(value.cellSize.height * value.rows - matchSize.height) <= tolerance,
+            abs(value.cellSize.width * value.columns - matchSize.width) <= tolerance ||
+                abs(value.cellSize.height * value.rows - matchSize.height) <= tolerance,
             "${value.cellSize} should match canvas width or height $matchSize",
             "${value.cellSize} shouldn't match width or height $matchSize"
         )
@@ -40,6 +40,7 @@ class SizingTest : StringSpec({
     "Rows" {
         checkAll(Arb.positiveInts(), sizeArb) { rows, canvasSize ->
             val canvasData = Sizing.Rows(rows).calculateCanvasData(canvasSize)
+
             canvasData.rows shouldBeExactly rows
             canvasData.cellSize.height * canvasData.rows shouldBeCloseTo canvasSize.height
         }
@@ -48,6 +49,7 @@ class SizingTest : StringSpec({
     "Columns" {
         checkAll(Arb.positiveInts(), sizeArb) { columns, canvasSize ->
             val canvasData = Sizing.Columns(columns).calculateCanvasData(canvasSize)
+
             canvasData.columns shouldBeExactly columns
             canvasData.cellSize.width * canvasData.columns shouldBeCloseTo canvasSize.width
         }
@@ -56,6 +58,7 @@ class SizingTest : StringSpec({
     "RowsAndColumns" {
         checkAll(Arb.positiveInts(), Arb.positiveInts(), sizeArb) { rows, columns, canvasSize ->
             val canvasData = Sizing.RowsAndColumns(rows, columns).calculateCanvasData(canvasSize)
+
             canvasData.rows shouldBeExactly rows
             canvasData.columns shouldBeExactly columns
             canvasData should matchWidthOrHeight(canvasSize)
@@ -65,6 +68,7 @@ class SizingTest : StringSpec({
     "CellSize" {
         checkAll(sizeArb, sizeArb) { cellSize, canvasSize ->
             val canvasData = Sizing.CellSize(cellSize).calculateCanvasData(canvasSize)
+
             canvasData.cellSize shouldBe cellSize
         }
     }

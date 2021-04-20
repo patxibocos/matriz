@@ -10,4 +10,3 @@ rootProject.name = "IntelliJ Splash Screen"
 include(":app")
 
 enableFeaturePreview("VERSION_CATALOGS")
- 
