@@ -70,7 +70,7 @@ fun DrawScope.drawIntelliJCell(cellSize: Size) {
                 cell.topLeftOffset.x * cellSize.width,
                 cell.topLeftOffset.y * cellSize.height
             ),
-            size = Size(cellSize.width, cellSize.height).times(2f)
+            size = cellSize.times(2f)
         )
     }
 }
