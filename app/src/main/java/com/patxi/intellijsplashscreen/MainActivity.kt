@@ -13,7 +13,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
-import com.patxi.intellijsplashscreen.Spacing.Companion.spacing
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +84,7 @@ fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier) {
         },
         modifier = modifier,
         contentAlignment = Alignment.Center,
-        spacing = spacing(vertical = 25f, horizontal = 50f, includeBorders = false),
+        spacing = Spacing(vertical = 25f, horizontal = 50f),
     )
 }
 
