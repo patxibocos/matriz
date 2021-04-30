@@ -13,7 +13,7 @@ import kotlin.math.min
 class CanvasData(val rows: Int, val columns: Int, val cellSize: Size)
 
 sealed class Sizing {
-    abstract fun calculateCanvasData(canvasSize: Size): CanvasData
+    abstract fun calculateCanvasData(canvasSize: Size, spacing: Float): CanvasData
 
     class Rows(private val rows: Int, private val sizeRatio: Float = 1f) : Sizing() {
         init {
@@ -21,9 +21,10 @@ sealed class Sizing {
             require(sizeRatio > 0)
         }
 
-        override fun calculateCanvasData(canvasSize: Size): CanvasData {
-            val cellWidth = min(canvasSize.width, canvasSize.height / rows * sizeRatio)
-            val columns = (canvasSize.width / cellWidth).toInt()
+        override fun calculateCanvasData(canvasSize: Size, spacing: Float): CanvasData {
+            val cellWidth =
+                min(canvasSize.width, (canvasSize.height - (rows - 1) * spacing) / rows * sizeRatio)
+            val columns = ((canvasSize.width + spacing) / (cellWidth + spacing)).toInt()
             return CanvasData(
                 rows = rows,
                 columns = columns,
@@ -38,9 +39,13 @@ sealed class Sizing {
             require(sizeRatio > 0)
         }
 
-        override fun calculateCanvasData(canvasSize: Size): CanvasData {
-            val cellHeight = min(canvasSize.height, canvasSize.width / columns / sizeRatio)
-            val rows = (canvasSize.height / cellHeight).toInt()
+        override fun calculateCanvasData(canvasSize: Size, spacing: Float): CanvasData {
+            val cellHeight =
+                min(
+                    canvasSize.height,
+                    (canvasSize.width - (columns - 1) * spacing) / columns / sizeRatio
+                )
+            val rows = ((canvasSize.height + spacing) / (cellHeight + spacing)).toInt()
             return CanvasData(
                 rows = rows,
                 columns = columns,
@@ -60,15 +65,15 @@ sealed class Sizing {
             require(sizeRatio > 0)
         }
 
-        override fun calculateCanvasData(canvasSize: Size): CanvasData {
+        override fun calculateCanvasData(canvasSize: Size, spacing: Float): CanvasData {
             val canvasRatio = canvasSize.width / canvasSize.height
             val cellWidth: Float
             val cellHeight: Float
             if (sizeRatio * (columns.toFloat() / rows) < canvasRatio) {
-                cellHeight = canvasSize.height / rows
+                cellHeight = (canvasSize.height - (rows - 1) * spacing) / rows
                 cellWidth = cellHeight * sizeRatio
             } else {
-                cellWidth = canvasSize.width / columns
+                cellWidth = (canvasSize.width - (columns - 1) * spacing) / columns
                 cellHeight = cellWidth / sizeRatio
             }
             return CanvasData(
@@ -87,10 +92,10 @@ sealed class Sizing {
 
         constructor(size: Float) : this(Size(size, size))
 
-        override fun calculateCanvasData(canvasSize: Size): CanvasData =
+        override fun calculateCanvasData(canvasSize: Size, spacing: Float): CanvasData =
             CanvasData(
-                rows = (canvasSize.height / size.height).toInt(),
-                columns = (canvasSize.width / size.width).toInt(),
+                rows = ((canvasSize.height + spacing) / (size.height + spacing)).toInt(),
+                columns = ((canvasSize.width + spacing) / (size.width + spacing)).toInt(),
                 cellSize = size
             )
     }
@@ -102,15 +107,16 @@ fun GridCanvas(
     onDrawCell: DrawScope.(row: Int, column: Int, size: Size) -> Unit,
     modifier: Modifier,
     contentAlignment: Alignment = Alignment.Center,
+    spacing: Float = 0f,
 ) {
     fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
 
     Canvas(modifier = modifier) {
-        val canvasData = sizing.calculateCanvasData(size)
+        val canvasData = sizing.calculateCanvasData(canvasSize = size, spacing = spacing)
         val alignOffset = contentAlignment.align(
             Size(
-                canvasData.columns * canvasData.cellSize.width,
-                canvasData.rows * canvasData.cellSize.height
+                canvasData.columns * canvasData.cellSize.width + (canvasData.columns - 1) * spacing,
+                canvasData.rows * canvasData.cellSize.height + (canvasData.rows - 1) * spacing
             ).toIntSize(),
             size.toIntSize(), layoutDirection
         )
@@ -118,8 +124,8 @@ fun GridCanvas(
             for (row in 0 until canvasData.rows) {
                 for (column in 0 until canvasData.columns) {
                     translate(
-                        left = column * canvasData.cellSize.width,
-                        top = row * canvasData.cellSize.height
+                        left = column * (canvasData.cellSize.width + spacing),
+                        top = row * (canvasData.cellSize.height + spacing)
                     ) {
                         onDrawCell(row, column, canvasData.cellSize)
                     }
