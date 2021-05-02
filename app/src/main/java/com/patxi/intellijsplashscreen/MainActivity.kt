@@ -20,7 +20,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             Surface(color = Color(0xFF514B4B)) {
                 IntelliJSplashScreen(
-                    sizing = Sizing.RowsAndColumns(rows = 15, columns = 8),
+                    sizing = Sizing.RowsAndColumns(
+                        rows = 15,
+                        columns = 8,
+                        filling = Filling.CellsAspectRatio.One
+                    ),
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -84,7 +88,6 @@ fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier) {
         },
         modifier = modifier,
         contentAlignment = Alignment.Center,
-        spacing = Spacing(vertical = 25f, horizontal = 50f),
     )
 }
 
@@ -92,7 +95,7 @@ fun IntelliJSplashScreen(sizing: Sizing, modifier: Modifier) {
 @Preview(widthDp = 1280, heightDp = 800)
 fun RowsAndColumnsPreview() =
     IntelliJSplashScreen(
-        sizing = Sizing.RowsAndColumns(rows = 8, columns = 13),
+        sizing = Sizing.RowsAndColumns(rows = 8, columns = 13, filling = Filling.All),
         modifier = Modifier.fillMaxSize()
     )
 
@@ -107,18 +110,28 @@ fun CellSizePreview() =
 @Composable
 @Preview
 fun RowsPreview() =
-    IntelliJSplashScreen(sizing = Sizing.Rows(13), modifier = Modifier.fillMaxSize())
+    IntelliJSplashScreen(
+        sizing = Sizing.Rows(rows = 13, cellsAspectRatio = 1f),
+        modifier = Modifier.fillMaxSize()
+    )
 
 @Composable
 @Preview
 fun ColumnsPreview() =
-    IntelliJSplashScreen(sizing = Sizing.Columns(6), modifier = Modifier.fillMaxSize())
+    IntelliJSplashScreen(
+        sizing = Sizing.Columns(columns = 6, cellsAspectRatio = 1f),
+        modifier = Modifier.fillMaxSize()
+    )
 
 @Composable
-@Preview
+@Preview(widthDp = 1080, heightDp = 1920)
 fun CirclesPreview() {
     GridCanvas(
-        sizing = Sizing.RowsAndColumns(26, 6, sizeRatio = 2f),
+        sizing = Sizing.RowsAndColumns(
+            rows = 26,
+            columns = 6,
+            filling = Filling.All
+        ),
         onDrawCell = { row, column, cellSize ->
             drawOval(
                 color = Color.Magenta,
@@ -127,5 +140,6 @@ fun CirclesPreview() {
         },
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart,
+        spacing = Spacing(50f),
     )
 }

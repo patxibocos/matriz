@@ -12,49 +12,61 @@ import kotlin.math.min
 
 class CanvasData(val rows: Int, val columns: Int, val cellSize: Size)
 
+sealed class Filling {
+    object All : Filling()
+
+    class CellsAspectRatio(val cellsAspectRatio: Float) : Filling() {
+        init {
+            require(cellsAspectRatio > 0)
+        }
+
+        companion object {
+            val One = CellsAspectRatio(1f)
+        }
+    }
+}
+
 sealed class Sizing {
     abstract fun calculateCanvasData(canvasSize: Size, spacing: Spacing): CanvasData
 
-    class Rows(private val rows: Int, private val sizeRatio: Float = 1f) : Sizing() {
+    class Rows(private val rows: Int, private val cellsAspectRatio: Float) : Sizing() {
         init {
             require(rows > 0)
-            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size, spacing: Spacing): CanvasData {
             val cellWidth =
                 min(
                     canvasSize.width,
-                    (canvasSize.height - (rows - 1) * spacing.vertical) / rows * sizeRatio
+                    (canvasSize.height - (rows - 1) * spacing.vertical) / rows * cellsAspectRatio
                 )
             val columns =
                 ((canvasSize.width + spacing.horizontal) / (cellWidth + spacing.horizontal)).toInt()
             return CanvasData(
                 rows = rows,
                 columns = columns,
-                cellSize = Size(cellWidth, cellWidth / sizeRatio)
+                cellSize = Size(cellWidth, cellWidth / cellsAspectRatio)
             )
         }
     }
 
-    class Columns(private val columns: Int, private val sizeRatio: Float = 1f) : Sizing() {
+    class Columns(private val columns: Int, private val cellsAspectRatio: Float) : Sizing() {
         init {
             require(columns > 0)
-            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size, spacing: Spacing): CanvasData {
             val cellHeight =
                 min(
                     canvasSize.height,
-                    (canvasSize.width - (columns - 1) * spacing.horizontal) / columns / sizeRatio
+                    (canvasSize.width - (columns - 1) * spacing.horizontal) / columns / cellsAspectRatio
                 )
             val rows =
                 ((canvasSize.height + spacing.vertical) / (cellHeight + spacing.vertical)).toInt()
             return CanvasData(
                 rows = rows,
                 columns = columns,
-                cellSize = Size(cellHeight * sizeRatio, cellHeight)
+                cellSize = Size(cellHeight * cellsAspectRatio, cellHeight)
             )
         }
     }
@@ -62,24 +74,33 @@ sealed class Sizing {
     class RowsAndColumns(
         private val rows: Int,
         private val columns: Int,
-        private val sizeRatio: Float = 1f
+        private val filling: Filling
     ) : Sizing() {
         init {
             require(rows > 0)
             require(columns > 0)
-            require(sizeRatio > 0)
         }
 
         override fun calculateCanvasData(canvasSize: Size, spacing: Spacing): CanvasData {
-            val canvasRatio = canvasSize.width / canvasSize.height
+            val canvasAvailableSpaceRatio =
+                (canvasSize.width - (columns - 1) * spacing.horizontal) / (canvasSize.height - (rows - 1) * spacing.vertical)
             val cellWidth: Float
             val cellHeight: Float
-            if (sizeRatio * (columns.toFloat() / rows) < canvasRatio) {
-                cellHeight = (canvasSize.height - (rows - 1) * spacing.vertical) / rows
-                cellWidth = cellHeight * sizeRatio
-            } else {
-                cellWidth = (canvasSize.width - (columns - 1) * spacing.horizontal) / columns
-                cellHeight = cellWidth / sizeRatio
+            when (filling) {
+                Filling.All -> {
+                    cellWidth = (canvasSize.width - (columns - 1) * spacing.horizontal) / columns
+                    cellHeight = (canvasSize.height - (rows - 1) * spacing.vertical) / rows
+                }
+                is Filling.CellsAspectRatio -> {
+                    if (filling.cellsAspectRatio * (columns.toFloat() / rows) < canvasAvailableSpaceRatio) {
+                        cellHeight = (canvasSize.height - (rows - 1) * spacing.vertical) / rows
+                        cellWidth = cellHeight * filling.cellsAspectRatio
+                    } else {
+                        cellWidth =
+                            (canvasSize.width - (columns - 1) * spacing.horizontal) / columns
+                        cellHeight = cellWidth / filling.cellsAspectRatio
+                    }
+                }
             }
             return CanvasData(
                 rows = rows,
@@ -141,6 +162,8 @@ fun GridCanvas(
 }
 
 class Spacing(val horizontal: Float, val vertical: Float) {
+    constructor(amount: Float) : this(amount, amount)
+
     companion object {
         val Zero = Spacing(0f, 0f)
     }

@@ -39,7 +39,7 @@ private infix fun Float.shouldBeCloseTo(expected: Float) =
 class SizingTest : StringSpec({
     "Rows" {
         checkAll(Arb.positiveInts(), sizeArb) { rows, canvasSize ->
-            val canvasData = Sizing.Rows(rows).calculateCanvasData(canvasSize, Spacing.Zero)
+            val canvasData = Sizing.Rows(rows, 1f).calculateCanvasData(canvasSize, Spacing.Zero)
 
             canvasData.rows shouldBeExactly rows
             canvasData.cellSize.height * canvasData.rows shouldBeCloseTo canvasSize.height
@@ -48,7 +48,8 @@ class SizingTest : StringSpec({
 
     "Columns" {
         checkAll(Arb.positiveInts(), sizeArb) { columns, canvasSize ->
-            val canvasData = Sizing.Columns(columns).calculateCanvasData(canvasSize, Spacing.Zero)
+            val canvasData =
+                Sizing.Columns(columns, 1f).calculateCanvasData(canvasSize, Spacing.Zero)
 
             canvasData.columns shouldBeExactly columns
             canvasData.cellSize.width * canvasData.columns shouldBeCloseTo canvasSize.width
@@ -58,7 +59,8 @@ class SizingTest : StringSpec({
     "RowsAndColumns" {
         checkAll(Arb.positiveInts(), Arb.positiveInts(), sizeArb) { rows, columns, canvasSize ->
             val canvasData =
-                Sizing.RowsAndColumns(rows, columns).calculateCanvasData(canvasSize, Spacing.Zero)
+                Sizing.RowsAndColumns(rows, columns, Filling.CellsAspectRatio.One)
+                    .calculateCanvasData(canvasSize, Spacing.Zero)
 
             canvasData.rows shouldBeExactly rows
             canvasData.columns shouldBeExactly columns
