@@ -1,10 +1,6 @@
-package com.patxi.intellijsplashscreen
+package com.github.patxibocos.cells
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,24 +9,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Surface(color = Color(0xFF514B4B)) {
-                IntelliJSplashScreen(
-                    sizing = Sizing.RowsAndColumns(
-                        rows = 15,
-                        columns = 8,
-                        filling = Filling.CellsAspectRatio.One
-                    ),
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-    }
-}
 
 sealed class IntelliJCell {
     object Circle : IntelliJCell()

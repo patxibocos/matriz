@@ -1,4 +1,4 @@
-package com.patxi.intellijsplashscreen
+package com.github.patxibocos.cells
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable

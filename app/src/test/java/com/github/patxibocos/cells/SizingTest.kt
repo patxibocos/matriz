@@ -1,4 +1,4 @@
-package com.patxi.intellijsplashscreen
+package com.github.patxibocos.cells
 
 import androidx.compose.ui.geometry.Size
 import io.kotest.core.spec.style.StringSpec

@@ -6,7 +6,7 @@ dependencyResolutionManagement {
         maven(url = "https://kotlin.bintray.com/kotlinx")
     }
 }
-rootProject.name = "IntelliJ Splash Screen"
+rootProject.name = "Cells"
 include(":app")
 
 enableFeaturePreview("VERSION_CATALOGS")
