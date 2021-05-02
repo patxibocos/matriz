@@ -28,8 +28,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose.material.material)
-    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.foundation.foundation)
 
     testImplementation(libs.kotest.property)
     testImplementation(libs.kotest.runner)
