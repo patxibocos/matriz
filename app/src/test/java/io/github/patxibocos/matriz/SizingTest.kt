@@ -1,4 +1,4 @@
-package com.github.patxibocos.cells
+package io.github.patxibocos.matriz
 
 import androidx.compose.ui.geometry.Size
 import io.kotest.core.spec.style.StringSpec

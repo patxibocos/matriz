@@ -6,7 +6,7 @@ dependencyResolutionManagement {
         maven(url = "https://kotlin.bintray.com/kotlinx")
     }
 }
-rootProject.name = "Cells"
+rootProject.name = "Matriz"
 include(":app")
 
 enableFeaturePreview("VERSION_CATALOGS")

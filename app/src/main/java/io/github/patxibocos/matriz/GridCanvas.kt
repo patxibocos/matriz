@@ -1,4 +1,4 @@
-package com.github.patxibocos.cells
+package io.github.patxibocos.matriz
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
