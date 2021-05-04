@@ -63,6 +63,7 @@ afterEvaluate {
                 groupId = "io.github.patxibocos"
                 artifactId = "matriz"
                 version = "0.0.1"
+                description = "A grid canvas composable for Android Jetpack Compose"
 
                 from(components["release"])
                 artifact(tasks["androidSourcesJar"])

@@ -22,8 +22,10 @@ jobs:
         echo "NEW_VERSION_CODE=$(echo ${GITHUB_REF/refs\/tags\//} | cut -c 2-)" >> $GITHUB_ENV
         echo "NEW_VERSION_NAME=$(echo ${GITHUB_REF/refs\/tags\//})" >> $GITHUB_ENV
 
-    - name: Publish on Sonatype Nexus
-      run: ./gradlew :library:publishReleasePublicationToSonatypeRepository
+    - name: Publish on Sonatype Nexus and release to Maven Central
+      run: |
+        ./gradlew :library:publishReleasePublicationToSonatypeRepository
+        ./gradlew :library:closeAndReleaseSonatypeStagingRepository
       working-directory: ./
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
