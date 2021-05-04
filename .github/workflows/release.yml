@@ -25,6 +25,13 @@ jobs:
     - name: Publish on Sonatype Nexus
       run: ./gradlew :library:publishReleasePublicationToSonatypeRepository
       working-directory: ./
+      env:
+        ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
+        ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEPASSWORD }}
+        ORG_GRADLE_PROJECT_sonatypeStagingProfileId: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPESTAGINGPROFILEID }}
+        ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+        ORG_GRADLE_PROJECT_signingSecretKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGSECRETKEY }}
+        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
 
     - name: Create GitHub release
       uses: actions/create-release@latest
