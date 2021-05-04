@@ -71,7 +71,7 @@ afterEvaluate {
                 pom {
                     name.set("Matriz")
                     description.set("A grid canvas composable for Android Jetpack Compose")
-                    url.set("https://github.com/getstream/matriz")
+                    url.set("https://github.com/patxibocos/matriz")
                     licenses {
                         license {
                             name.set("MIT License")

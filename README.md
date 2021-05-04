@@ -1,4 +1,3 @@
 # Matriz
 
-<img src="/results/IntelliJ IDEA Splash Screen.png">
-<img src="/results/Android Jetpack Compose.png">
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.patxibocos/matriz?label=latest%20release)](https://search.maven.org/artifact/io.github.patxibocos/matriz)
