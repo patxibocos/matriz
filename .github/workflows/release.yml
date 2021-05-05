@@ -17,6 +17,9 @@ jobs:
       with:
         java-version: 11
 
+    - name: Build
+      run: ./gradlew :library:build
+
     - name: Set versioning related env vars
       run: |
         echo "GIT_TAG_NAME=$(echo ${GITHUB_REF/refs\/tags\//})" >> $GITHUB_ENV
@@ -29,7 +32,13 @@ jobs:
         echo "Git tag version doesn't match with Gradle project version"
         exit 1
 
-    - name: Publish on Sonatype Nexus and release to Maven Central
+    - name: Assemble release
+      run: ./gradlew :library:assembleRelease
+
+    - name: Sources jar
+      run: ./gradlew :library:androidSourcesJar
+
+    - name: Upload to Sonatype Nexus and publish to Maven Central
       run: |
         ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
       working-directory: ./
