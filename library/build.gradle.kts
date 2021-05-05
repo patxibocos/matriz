@@ -62,7 +62,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 groupId = "io.github.patxibocos"
                 artifactId = "matriz"
-                version = "0.0.1"
+                version = project.version.toString()
                 description = "A grid canvas composable for Android Jetpack Compose"
 
                 from(components["release"])

@@ -17,15 +17,21 @@ jobs:
       with:
         java-version: 11
 
-    - name: Set tag version in an environment variable (remove the first character)
+    - name: Set versioning related env vars
       run: |
-        echo "NEW_VERSION_CODE=$(echo ${GITHUB_REF/refs\/tags\//} | cut -c 2-)" >> $GITHUB_ENV
-        echo "NEW_VERSION_NAME=$(echo ${GITHUB_REF/refs\/tags\//})" >> $GITHUB_ENV
+        echo "GIT_TAG_NAME=$(echo ${GITHUB_REF/refs\/tags\//})" >> $GITHUB_ENV
+        echo "GIT_TAG_VERSION_CODE=$(echo ${GITHUB_REF/refs\/tags\//} | cut -c 2-)" >> $GITHUB_ENV
+        echo "GRADLE_PROJECT_VERSION=$(./gradlew :library:properties -q | grep "version:" | awk '{print $2}')" >> $GITHUB_ENV
+
+    - name: Check that Git tag and Gradle project versions match
+      if: env.GIT_TAG_VERSION_CODE != env.GRADLE_PROJECT_VERSION
+      run: |
+        echo "Git tag version doesn't match with Gradle project version"
+        exit 1
 
     - name: Publish on Sonatype Nexus and release to Maven Central
       run: |
-        ./gradlew :library:publishReleasePublicationToSonatypeRepository
-        ./gradlew :library:closeAndReleaseSonatypeStagingRepository
+        ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
       working-directory: ./
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
@@ -40,7 +46,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.NEW_VERSION_NAME }}
-        release_name: ${{ env.NEW_VERSION_NAME }}
+        tag_name: ${{ env.GIT_TAG_NAME }}
+        release_name: ${{ env.GIT_TAG_NAME }}
         body: |
-          https://search.maven.org/artifact/io.github.patxibocos/matriz/${{ env.NEW_VERSION_CODE }}/aar
+          https://search.maven.org/artifact/io.github.patxibocos/matriz/${{ env.GIT_TAG_VERSION_CODE }}/aar
