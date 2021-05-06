@@ -4,75 +4,67 @@ import androidx.compose.ui.geometry.Size
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.Matcher
 import io.kotest.matchers.MatcherResult
-import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.bind
-import io.kotest.property.arbitrary.map
-import io.kotest.property.arbitrary.positiveInts
 import io.kotest.property.checkAll
 import kotlin.math.abs
 
-private val sizeArb: Arb<Size> = Arb.bind(
-    Arb.positiveInts(1_000_000).map { it.toFloat() },
-    Arb.positiveInts(1_000_000).map { it.toFloat() }
-) { width, height -> Size(width, height) }
-
 private const val tolerance = .1f
 
-private fun matchWidthOrHeight(matchSize: Size) = object : Matcher<CanvasData> {
-    override fun test(value: CanvasData): MatcherResult {
+private fun matchWidthOrHeight(matchSize: Size) = object : Matcher<SizingResult> {
+    override fun test(value: SizingResult): MatcherResult {
         return MatcherResult(
             abs(value.cellSize.width * value.columns - matchSize.width) <= tolerance ||
                 abs(value.cellSize.height * value.rows - matchSize.height) <= tolerance,
-            "${value.cellSize} should match canvas width or height $matchSize",
-            "${value.cellSize} shouldn't match width or height $matchSize"
+            "cells should either match canvas' width or height",
+            "cells should neither match canvas' width nor height"
         )
     }
 }
 
-private infix fun Float.shouldBeCloseTo(expected: Float) =
-    this shouldBe expected.plusOrMinus(tolerance)
-
 class SizingTest : StringSpec({
-    "Rows" {
-        checkAll(Arb.positiveInts(), sizeArb) { rows, canvasSize ->
-            val canvasData = Sizing.Rows(rows, 1f).calculateCanvasData(canvasSize, Spacing.Zero)
+    "rows sizing calculates columns and cell size correctly" {
+        checkAll(rowsArb, sizeArb) { rows, canvasSize ->
+            val rowsSizing = Sizing.Rows(rows, Aspect.CellsRatio.One)
 
-            canvasData.rows shouldBeExactly rows
-            canvasData.cellSize.height * canvasData.rows shouldBeCloseTo canvasSize.height
+            val sizingResult = rowsSizing.calculateSizing(canvasSize)
+
+            sizingResult.rows shouldBeExactly rows
+            sizingResult should matchWidthOrHeight(canvasSize)
         }
     }
 
-    "Columns" {
-        checkAll(Arb.positiveInts(), sizeArb) { columns, canvasSize ->
-            val canvasData =
-                Sizing.Columns(columns, 1f).calculateCanvasData(canvasSize, Spacing.Zero)
+    "columns sizing calculates rows and cell size correctly" {
+        checkAll(columnsArb, sizeArb) { columns, canvasSize ->
+            val columnsSizing = Sizing.Columns(columns, Aspect.CellsRatio.One)
 
-            canvasData.columns shouldBeExactly columns
-            canvasData.cellSize.width * canvasData.columns shouldBeCloseTo canvasSize.width
+            val sizingResult = columnsSizing.calculateSizing(canvasSize)
+
+            sizingResult.columns shouldBeExactly columns
+            sizingResult should matchWidthOrHeight(canvasSize)
         }
     }
 
-    "RowsAndColumns" {
-        checkAll(Arb.positiveInts(), Arb.positiveInts(), sizeArb) { rows, columns, canvasSize ->
-            val canvasData =
-                Sizing.RowsAndColumns(rows, columns, Filling.CellsAspectRatio.One)
-                    .calculateCanvasData(canvasSize, Spacing.Zero)
+    "rows and columns sizing calculates cell size correctly" {
+        checkAll(rowsArb, columnsArb, sizeArb) { rows, columns, canvasSize ->
+            val rowsAndColumnsSizing = Sizing.RowsAndColumns(rows, columns, Aspect.CellsRatio.One)
 
-            canvasData.rows shouldBeExactly rows
-            canvasData.columns shouldBeExactly columns
-            canvasData should matchWidthOrHeight(canvasSize)
+            val sizingResult = rowsAndColumnsSizing.calculateSizing(canvasSize)
+
+            sizingResult.rows shouldBeExactly rows
+            sizingResult.columns shouldBeExactly columns
+            sizingResult should matchWidthOrHeight(canvasSize)
         }
     }
 
-    "CellSize" {
+    "cell size sizing calculates rows and columns correctly" {
         checkAll(sizeArb, sizeArb) { cellSize, canvasSize ->
-            val canvasData = Sizing.CellSize(cellSize).calculateCanvasData(canvasSize, Spacing.Zero)
+            val cellSizeSizing = Sizing.CellSize(cellSize)
 
-            canvasData.cellSize shouldBe cellSize
+            val sizingResult = cellSizeSizing.calculateSizing(canvasSize)
+
+            sizingResult.cellSize shouldBe cellSize
         }
     }
 })
