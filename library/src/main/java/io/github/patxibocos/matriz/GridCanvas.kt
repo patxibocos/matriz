@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.IntSize
 @Composable
 fun GridCanvas(
     sizing: Sizing,
-    onDrawCell: DrawScope.(row: Int, column: Int, size: Size) -> Unit,
+    onDrawCell: DrawScope.(row: Int, column: Int, cellSize: Size) -> Unit,
     modifier: Modifier,
     contentAlignment: Alignment = Alignment.Center,
     spacing: Spacing = Spacing.Zero,

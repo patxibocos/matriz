@@ -11,12 +11,11 @@ import io.kotest.property.arbitrary.positiveInts
 
 private const val max: Int = 1_000_000
 
-private fun Arb.Companion.positiveFloats(max: Float = Float.MAX_VALUE): Arb<Float> =
-    Arb.float().filter { it > 0 && it <= max }
+private val positiveFloat: Arb<Float> = Arb.float().filter { it > 0 && it <= max }
 
 val sizeArb: Arb<Size> = Arb.bind(
-    Arb.positiveFloats(max.toFloat()),
-    Arb.positiveFloats(max.toFloat())
+    positiveFloat,
+    positiveFloat
 ) { width, height -> Size(width, height) }
 
 val rowsArb: Arb<Int> = Arb.positiveInts(max)
