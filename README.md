@@ -10,7 +10,7 @@ Simply add the dependency:
 
 ```kotlin
 dependencies {
-    ...
+    …
     implementation("io.github.patxibocos:matriz:$version")
 }
 ```
@@ -21,15 +21,25 @@ The API is very simple, there is a GridCanvas composable function that wraps a C
 
 ```kotlin
 GridCanvas(
-    sizing = ...,
+    sizing = …,
     onDrawCell = { row: Int, column: Int, cellSize: Size ->
-        ...        
+        …
     }
-    modifier = ...,
-    contentAlignment = ...,
-    spacing = ...,
+    modifier = …,
+    contentAlignment = …,
+    spacing = …,
 )
 ```
+
+## How does it work ❓
+
+Based on the received [sizing](#sizings-) and [spacing](#spacing-) constraints, the total number of columns and rows will be calculated.
+
+For each of the cells contained in the grid the `onDrawCell` lambda will be called. This lambda receiver is a [DrawScope](https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/drawscope/DrawScope) where different drawing functions can be called.
+
+Before calling the lambda, the canvas gets **translated** to the appropriate coordinates so the drawing scope is relative to the top left corner of the cell. There is no need to take the current row/column nor spacing.
+
+The `cellSize` argument passed to the lambda will always have the same value. That size can be understood as the bounds which drawing shouldn't surpass. Otherwise two different cells would collision. It is up to clients to respect the cell size when drawing as there is no runtime check (because the original drawing scope is passed without adding any wrapper).
 
 ## Sizings 📏
 
@@ -90,7 +100,7 @@ In this example, the grid of cells will be centered relative to the canvas:
 
 ```kotlin
 GridCanvas(
-    ...,
+    …,
     contentAlignment = Alignment.Center
 )
 ```
@@ -101,7 +111,7 @@ Setting space between cells is also supported via the spacing argument. It can b
 
 ```kotlin
 GridCanvas(
-    ...,
+    …,
     spacing = Spacing(
         horizontal = 10f,
         vertical = 20f,
