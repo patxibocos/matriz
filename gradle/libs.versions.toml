@@ -1,6 +1,6 @@
 [versions]
-compose = "1.0.0-beta06"
-kotest = "4.5.0"
+compose = "1.0.0-beta07"
+kotest = "4.6.0"
 ktlint = "0.41.0"
 
 [libraries]
