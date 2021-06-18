@@ -5,10 +5,10 @@ import kotlin.math.min
 
 class SizingResult(val rows: Int, val columns: Int, val cellSize: Size)
 
-sealed class Sizing {
-    abstract fun calculateSizing(canvasSize: Size, spacing: Spacing = Spacing.Zero): SizingResult
+sealed interface Sizing {
+    fun calculateSizing(canvasSize: Size, spacing: Spacing = Spacing.Zero): SizingResult
 
-    class Rows(private val rows: Int, private val cellsAspectRatio: Aspect.CellsRatio) : Sizing() {
+    class Rows(private val rows: Int, private val cellsAspectRatio: Aspect.CellsRatio) : Sizing {
         init {
             require(rows > 0)
         }
@@ -32,7 +32,7 @@ sealed class Sizing {
     class Columns(
         private val columns: Int,
         private val cellsAspectRatio: Aspect.CellsRatio
-    ) : Sizing() {
+    ) : Sizing {
         init {
             require(columns > 0)
         }
@@ -57,7 +57,7 @@ sealed class Sizing {
         private val rows: Int,
         private val columns: Int,
         private val aspect: Aspect
-    ) : Sizing() {
+    ) : Sizing {
         init {
             require(rows > 0)
             require(columns > 0)
@@ -92,7 +92,7 @@ sealed class Sizing {
         }
     }
 
-    class CellSize(private val size: Size) : Sizing() {
+    class CellSize(private val size: Size) : Sizing {
         init {
             require(size.width > 0f)
             require(size.height > 0f)
