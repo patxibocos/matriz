@@ -1,4 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version ("1.1.0")
 }
@@ -9,11 +8,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.1.0-alpha02")
+        classpath("com.android.tools.build:gradle:7.1.0-alpha05")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle.kts files
     }
 }
 
