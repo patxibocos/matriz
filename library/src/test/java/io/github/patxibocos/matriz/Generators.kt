@@ -3,28 +3,27 @@ package io.github.patxibocos.matriz
 import androidx.compose.ui.geometry.Size
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.bind
-import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.flatMap
-import io.kotest.property.arbitrary.float
 import io.kotest.property.arbitrary.map
-import io.kotest.property.arbitrary.positiveInts
+import io.kotest.property.arbitrary.numericFloat
+import io.kotest.property.arbitrary.positiveFloat
+import io.kotest.property.arbitrary.positiveInt
 
 private const val max: Int = 1_000_000
 
-private val positiveFloat: Arb<Float> = Arb.float().filter { it > 0 && it <= max }
+private val positiveFloat: Arb<Float> = Arb.numericFloat(1f, max.toFloat())
 
 val sizeArb: Arb<Size> = Arb.bind(
     positiveFloat,
     positiveFloat
 ) { width, height -> Size(width, height) }
 
-val rowsArb: Arb<Int> = Arb.positiveInts(max)
+val rowsArb: Arb<Int> = Arb.positiveInt(max)
 
-val columnsArb: Arb<Int> = Arb.positiveInts(max)
+val columnsArb: Arb<Int> = Arb.positiveInt(max)
 
-val spacingArb: Arb<Float> = Arb.float().filter { it > 0 && it < max }
+val spacingArb: Arb<Float> = Arb.positiveFloat()
 
 val canvasAndCellSizeArb: Arb<Pair<Size, Size>> = sizeArb.flatMap { canvasSize ->
-    sizeArb.filter { it.width <= canvasSize.width && it.height <= canvasSize.height }
-        .map { canvasSize to it }
+    sizeArb.map { canvasSize to it }
 }

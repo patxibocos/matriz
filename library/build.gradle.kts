@@ -3,13 +3,13 @@ import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("com.diffplug.spotless") version ("5.14.2")
+    id("com.diffplug.spotless") version ("6.11.0")
     `maven-publish`
     signing
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21

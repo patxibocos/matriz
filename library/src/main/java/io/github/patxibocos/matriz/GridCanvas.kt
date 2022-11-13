@@ -15,7 +15,7 @@ fun GridCanvas(
     onDrawCell: DrawScope.(row: Int, column: Int, cellSize: Size) -> Unit,
     modifier: Modifier,
     contentAlignment: Alignment = Alignment.Center,
-    spacing: Spacing = Spacing.Zero,
+    spacing: Spacing = Spacing.Zero
 ) {
     fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
 
@@ -26,7 +26,8 @@ fun GridCanvas(
                 canvasData.columns * canvasData.cellSize.width + (canvasData.columns - 1) * spacing.horizontal,
                 canvasData.rows * canvasData.cellSize.height + (canvasData.rows - 1) * spacing.vertical
             ).toIntSize(),
-            size.toIntSize(), layoutDirection
+            size.toIntSize(),
+            layoutDirection
         )
         translate(alignOffset.x.toFloat(), alignOffset.y.toFloat()) {
             for (row in 0 until canvasData.rows) {
