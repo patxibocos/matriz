@@ -8,5 +8,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Matriz"
 include(":library")
-
-enableFeaturePreview("VERSION_CATALOGS")
