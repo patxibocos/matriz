@@ -9,13 +9,13 @@ class SpacingTest : StringSpec({
         checkAll(
             canvasAndCellSizeArb,
             spacingArb,
-            spacingArb
+            spacingArb,
         ) { (canvasSize, cellSize), horizontalSpacing, verticalSpacing ->
             val cellSizeSizing = Sizing.CellSize(cellSize)
 
             val sizingResult = cellSizeSizing.calculateSizing(
                 canvasSize,
-                Spacing(horizontalSpacing, verticalSpacing)
+                Spacing(horizontalSpacing, verticalSpacing),
             )
 
             sizingResult.rows shouldBeExactly ((canvasSize.height + verticalSpacing) / (cellSize.height + verticalSpacing)).toInt()

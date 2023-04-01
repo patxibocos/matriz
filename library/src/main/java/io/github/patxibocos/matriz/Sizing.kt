@@ -17,21 +17,21 @@ sealed interface Sizing {
             val cellWidth =
                 min(
                     canvasSize.width,
-                    (canvasSize.height - (rows - 1) * spacing.vertical) / rows * cellsAspectRatio.ratio
+                    (canvasSize.height - (rows - 1) * spacing.vertical) / rows * cellsAspectRatio.ratio,
                 )
             val columns =
                 ((canvasSize.width + spacing.horizontal) / (cellWidth + spacing.horizontal)).toInt()
             return SizingResult(
                 rows = rows,
                 columns = columns,
-                cellSize = Size(cellWidth, cellWidth / cellsAspectRatio.ratio)
+                cellSize = Size(cellWidth, cellWidth / cellsAspectRatio.ratio),
             )
         }
     }
 
     class Columns(
         private val columns: Int,
-        private val cellsAspectRatio: Aspect.CellsRatio
+        private val cellsAspectRatio: Aspect.CellsRatio,
     ) : Sizing {
         init {
             require(columns > 0)
@@ -41,14 +41,14 @@ sealed interface Sizing {
             val cellHeight =
                 min(
                     canvasSize.height,
-                    (canvasSize.width - (columns - 1) * spacing.horizontal) / columns / cellsAspectRatio.ratio
+                    (canvasSize.width - (columns - 1) * spacing.horizontal) / columns / cellsAspectRatio.ratio,
                 )
             val rows =
                 ((canvasSize.height + spacing.vertical) / (cellHeight + spacing.vertical)).toInt()
             return SizingResult(
                 rows = rows,
                 columns = columns,
-                cellSize = Size(cellHeight * cellsAspectRatio.ratio, cellHeight)
+                cellSize = Size(cellHeight * cellsAspectRatio.ratio, cellHeight),
             )
         }
     }
@@ -56,7 +56,7 @@ sealed interface Sizing {
     class RowsAndColumns(
         private val rows: Int,
         private val columns: Int,
-        private val aspect: Aspect
+        private val aspect: Aspect,
     ) : Sizing {
         init {
             require(rows > 0)
@@ -87,7 +87,7 @@ sealed interface Sizing {
             return SizingResult(
                 rows = rows,
                 columns = columns,
-                cellSize = Size(cellWidth, cellHeight)
+                cellSize = Size(cellWidth, cellHeight),
             )
         }
     }
@@ -104,7 +104,7 @@ sealed interface Sizing {
             SizingResult(
                 rows = ((canvasSize.height + spacing.vertical) / (size.height + spacing.vertical)).toInt(),
                 columns = ((canvasSize.width + spacing.horizontal) / (size.width + spacing.horizontal)).toInt(),
-                cellSize = size
+                cellSize = size,
             )
     }
 }

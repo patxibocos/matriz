@@ -18,7 +18,7 @@ private fun matchWidthOrHeight(matchSize: Size) = object : Matcher<SizingResult>
             abs(value.cellSize.width * value.columns - matchSize.width) <= tolerance ||
                 abs(value.cellSize.height * value.rows - matchSize.height) <= tolerance,
             failureMessageFn = { "cells should either match canvas' width or height" },
-            negatedFailureMessageFn = { "cells should neither match canvas' width nor height" }
+            negatedFailureMessageFn = { "cells should neither match canvas' width nor height" },
         )
     }
 }

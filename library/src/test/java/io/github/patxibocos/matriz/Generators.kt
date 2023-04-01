@@ -15,7 +15,7 @@ private val positiveFloat: Arb<Float> = Arb.numericFloat(1f, max.toFloat())
 
 val sizeArb: Arb<Size> = Arb.bind(
     positiveFloat,
-    positiveFloat
+    positiveFloat,
 ) { width, height -> Size(width, height) }
 
 val rowsArb: Arb<Int> = Arb.positiveInt(max)
