@@ -3,7 +3,7 @@ import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("com.diffplug.spotless") version ("6.17.0")
+    id("com.diffplug.spotless") version ("6.18.0")
     `maven-publish`
     signing
 }
