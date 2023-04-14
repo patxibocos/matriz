@@ -9,6 +9,7 @@ plugins {
 }
 
 android {
+    namespace = "io.github.patxibocos.matriz"
     compileSdk = 33
 
     defaultConfig {
