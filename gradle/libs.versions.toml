@@ -1,9 +1,9 @@
 [versions]
-compose = "1.4.2"
+compose-compiler = "1.4.6"
 kotest = "5.6.1"
 ktlint = "0.48.2"
 
 [libraries]
-compose-foundation-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-foundation-foundation = "androidx.compose.foundation:foundation:1.4.2"
 kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
