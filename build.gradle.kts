@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.gradle-nexus.publish-plugin") version ("1.3.0")
+    alias(libs.plugins.nexus.publish)
 }
 
 buildscript {
@@ -18,7 +18,7 @@ tasks.register("clean", Delete::class) {
 }
 
 nexusPublishing {
-    repositories {
+    this.repositories {
         sonatype {
             val sonatypeStagingProfileId: String? by project
             val sonatypeUsername: String? by project

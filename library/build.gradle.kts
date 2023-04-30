@@ -3,7 +3,7 @@ import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("com.diffplug.spotless") version ("6.18.0")
+    alias(libs.plugins.spotless)
     `maven-publish`
     signing
 }
@@ -45,6 +45,11 @@ tasks.withType<Test> {
 spotless {
     kotlin {
         target("**/*.kt")
+        ktlint(libs.versions.ktlint.get())
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts")
         ktlint(libs.versions.ktlint.get())
     }
 }
