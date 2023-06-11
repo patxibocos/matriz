@@ -1,6 +1,7 @@
 package io.github.patxibocos.matriz
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -9,6 +10,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.IntSize
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GridCanvas(
     sizing: Sizing,
@@ -16,10 +18,11 @@ fun GridCanvas(
     modifier: Modifier,
     contentAlignment: Alignment = Alignment.Center,
     spacing: Spacing = Spacing.Zero,
+    contentDescription: String? = null,
 ) {
     fun Size.toIntSize(): IntSize = IntSize(width.toInt(), height.toInt())
 
-    Canvas(modifier = modifier) {
+    val onDraw: DrawScope.() -> Unit = {
         val canvasData = sizing.calculateSizing(canvasSize = size, spacing = spacing)
         val alignOffset = contentAlignment.align(
             Size(
@@ -41,5 +44,10 @@ fun GridCanvas(
                 }
             }
         }
+    }
+    if (contentDescription == null) {
+        Canvas(modifier = modifier, onDraw = onDraw)
+    } else {
+        Canvas(modifier = modifier, onDraw = onDraw, contentDescription = contentDescription)
     }
 }
