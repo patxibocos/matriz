@@ -100,6 +100,8 @@ afterEvaluate {
                 }
             }
         }
+
+        tasks.getByName("generateMetadataFileForReleasePublication").dependsOn("androidSourcesJar")
     }
 
     signing {
