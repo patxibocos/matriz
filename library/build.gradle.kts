@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.api.DefaultAndroidSourceDirectorySet
-
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -54,13 +52,6 @@ spotless {
     }
 }
 
-tasks.register<Jar>(name = "androidSourcesJar") {
-    val androidSourceSet =
-        android.sourceSets["main"].java.srcDirs() as DefaultAndroidSourceDirectorySet
-    from(androidSourceSet.srcDirs)
-    archiveClassifier.set("sources")
-}
-
 afterEvaluate {
     publishing {
         publications {
@@ -71,7 +62,6 @@ afterEvaluate {
                 description = "A grid canvas composable for Android Jetpack Compose"
 
                 from(components["release"])
-                artifact(tasks["androidSourcesJar"])
 
                 pom {
                     name.set("Matriz")
@@ -100,8 +90,6 @@ afterEvaluate {
                 }
             }
         }
-
-        tasks.getByName("generateMetadataFileForReleasePublication").dependsOn("androidSourcesJar")
     }
 
     signing {
