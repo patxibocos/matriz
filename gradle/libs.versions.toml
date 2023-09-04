@@ -1,8 +1,8 @@
 [versions]
-compose-compiler = "1.4.6"
+compose-compiler = "1.5.3"
 kotest = "5.7.1"
 kotlin = "1.9.10"
-ktlint = "0.48.2"
+ktlint = "0.50.0"
 
 [libraries]
 android-plugin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
