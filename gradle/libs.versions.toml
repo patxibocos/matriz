@@ -1,6 +1,6 @@
 [versions]
 compose-compiler = "1.5.3"
-kotest = "5.7.2"
+kotest = "5.8.0"
 kotlin = "1.9.10"
 ktlint = "0.50.0"
 
