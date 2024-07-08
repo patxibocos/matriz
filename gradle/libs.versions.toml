@@ -1,7 +1,6 @@
 [versions]
-compose-compiler = "1.5.8"
 kotest = "5.9.1"
-kotlin = "1.9.22"
+kotlin = "2.0.0"
 ktlint = "0.50.0"
 
 [libraries]
@@ -14,3 +13,4 @@ kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest"
 [plugins]
 nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.spotless)
     `maven-publish`
     signing
@@ -8,7 +9,7 @@ plugins {
 
 android {
     namespace = "io.github.patxibocos.matriz"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
@@ -23,9 +24,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
 

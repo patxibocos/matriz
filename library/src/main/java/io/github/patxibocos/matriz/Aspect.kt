@@ -1,7 +1,7 @@
 package io.github.patxibocos.matriz
 
 sealed interface Aspect {
-    object Fill : Aspect
+    data object Fill : Aspect
 
     class CellsRatio(val ratio: Float) : Aspect {
         init {
