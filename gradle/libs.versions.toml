@@ -5,7 +5,7 @@ ktlint = "0.50.0"
 
 [libraries]
 android-plugin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-plugin-gradle = "com.android.tools.build:gradle:8.12.2"
+kotlin-plugin-gradle = "com.android.tools.build:gradle:8.13.0"
 compose-foundation-foundation = "androidx.compose.foundation:foundation:1.9.0"
 kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
