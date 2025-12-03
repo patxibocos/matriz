@@ -1,7 +1,7 @@
 [versions]
 kotest = "6.0.7"
 kotlin = "2.2.21"
-ktlint = "0.50.0"
+ktlint = "1.8.0"
 
 [libraries]
 android-plugin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -12,5 +12,5 @@ kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest"
 
 [plugins]
 nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-spotless = { id = "com.diffplug.spotless", version = "8.0.0" }
+spotless = { id = "com.diffplug.spotless", version = "8.1.0" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
