@@ -3,17 +3,30 @@ package io.github.patxibocos.matriz
 import androidx.compose.ui.geometry.Size
 import kotlin.math.min
 
-class SizingResult(val rows: Int, val columns: Int, val cellSize: Size)
+class SizingResult(
+    val rows: Int,
+    val columns: Int,
+    val cellSize: Size,
+)
 
 sealed interface Sizing {
-    fun calculateSizing(canvasSize: Size, spacing: Spacing = Spacing.Zero): SizingResult
+    fun calculateSizing(
+        canvasSize: Size,
+        spacing: Spacing = Spacing.Zero,
+    ): SizingResult
 
-    class Rows(private val rows: Int, private val cellsAspectRatio: Aspect.CellsRatio) : Sizing {
+    class Rows(
+        private val rows: Int,
+        private val cellsAspectRatio: Aspect.CellsRatio,
+    ) : Sizing {
         init {
             require(rows > 0)
         }
 
-        override fun calculateSizing(canvasSize: Size, spacing: Spacing): SizingResult {
+        override fun calculateSizing(
+            canvasSize: Size,
+            spacing: Spacing,
+        ): SizingResult {
             val cellWidth =
                 min(
                     canvasSize.width,
@@ -37,7 +50,10 @@ sealed interface Sizing {
             require(columns > 0)
         }
 
-        override fun calculateSizing(canvasSize: Size, spacing: Spacing): SizingResult {
+        override fun calculateSizing(
+            canvasSize: Size,
+            spacing: Spacing,
+        ): SizingResult {
             val cellHeight =
                 min(
                     canvasSize.height,
@@ -63,7 +79,10 @@ sealed interface Sizing {
             require(columns > 0)
         }
 
-        override fun calculateSizing(canvasSize: Size, spacing: Spacing): SizingResult {
+        override fun calculateSizing(
+            canvasSize: Size,
+            spacing: Spacing,
+        ): SizingResult {
             val canvasAvailableSpaceRatio =
                 (canvasSize.width - (columns - 1) * spacing.horizontal) / (canvasSize.height - (rows - 1) * spacing.vertical)
             val cellWidth: Float
@@ -73,6 +92,7 @@ sealed interface Sizing {
                     cellWidth = (canvasSize.width - (columns - 1) * spacing.horizontal) / columns
                     cellHeight = (canvasSize.height - (rows - 1) * spacing.vertical) / rows
                 }
+
                 is Aspect.CellsRatio -> {
                     if (aspect.ratio * (columns.toFloat() / rows) < canvasAvailableSpaceRatio) {
                         cellHeight = (canvasSize.height - (rows - 1) * spacing.vertical) / rows
@@ -92,7 +112,9 @@ sealed interface Sizing {
         }
     }
 
-    class CellSize(private val size: Size) : Sizing {
+    class CellSize(
+        private val size: Size,
+    ) : Sizing {
         init {
             require(size.width > 0f)
             require(size.height > 0f)
@@ -100,7 +122,10 @@ sealed interface Sizing {
 
         constructor(size: Float) : this(Size(size, size))
 
-        override fun calculateSizing(canvasSize: Size, spacing: Spacing): SizingResult =
+        override fun calculateSizing(
+            canvasSize: Size,
+            spacing: Spacing,
+        ): SizingResult =
             SizingResult(
                 rows = ((canvasSize.height + spacing.vertical) / (size.height + spacing.vertical)).toInt(),
                 columns = ((canvasSize.width + spacing.horizontal) / (size.width + spacing.horizontal)).toInt(),

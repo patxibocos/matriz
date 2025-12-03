@@ -1,7 +1,7 @@
 [versions]
 kotest = "6.0.7"
 kotlin = "2.2.21"
-ktlint = "0.50.0"
+ktlint = "1.8.0"
 
 [libraries]
 android-plugin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

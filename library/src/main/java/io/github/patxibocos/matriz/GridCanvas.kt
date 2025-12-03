@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.IntSize
 
+@Suppress("FunctionName")
 @Composable
 fun GridCanvas(
     sizing: Sizing,
@@ -22,14 +23,15 @@ fun GridCanvas(
 
     val onDraw: DrawScope.() -> Unit = {
         val canvasData = sizing.calculateSizing(canvasSize = size, spacing = spacing)
-        val alignOffset = contentAlignment.align(
-            Size(
-                canvasData.columns * canvasData.cellSize.width + (canvasData.columns - 1) * spacing.horizontal,
-                canvasData.rows * canvasData.cellSize.height + (canvasData.rows - 1) * spacing.vertical,
-            ).toIntSize(),
-            size.toIntSize(),
-            layoutDirection,
-        )
+        val alignOffset =
+            contentAlignment.align(
+                Size(
+                    canvasData.columns * canvasData.cellSize.width + (canvasData.columns - 1) * spacing.horizontal,
+                    canvasData.rows * canvasData.cellSize.height + (canvasData.rows - 1) * spacing.vertical,
+                ).toIntSize(),
+                size.toIntSize(),
+                layoutDirection,
+            )
         translate(alignOffset.x.toFloat(), alignOffset.y.toFloat()) {
             for (row in 0 until canvasData.rows) {
                 for (column in 0 until canvasData.columns) {

@@ -1,6 +1,9 @@
 package io.github.patxibocos.matriz
 
-class Spacing(val horizontal: Float, val vertical: Float) {
+class Spacing(
+    val horizontal: Float,
+    val vertical: Float,
+) {
     constructor(amount: Float) : this(amount, amount)
 
     companion object {

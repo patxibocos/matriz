@@ -9,21 +9,23 @@ import io.kotest.property.arbitrary.numericFloat
 import io.kotest.property.arbitrary.positiveFloat
 import io.kotest.property.arbitrary.positiveInt
 
-private const val max: Int = 1_000_000
+private const val MAX: Int = 1_000_000
 
-private val positiveFloat: Arb<Float> = Arb.numericFloat(1f, max.toFloat())
+private val positiveFloat: Arb<Float> = Arb.numericFloat(1f, MAX.toFloat())
 
-val sizeArb: Arb<Size> = Arb.bind(
-    positiveFloat,
-    positiveFloat,
-) { width, height -> Size(width, height) }
+val sizeArb: Arb<Size> =
+    Arb.bind(
+        positiveFloat,
+        positiveFloat,
+    ) { width, height -> Size(width, height) }
 
-val rowsArb: Arb<Int> = Arb.positiveInt(max)
+val rowsArb: Arb<Int> = Arb.positiveInt(MAX)
 
-val columnsArb: Arb<Int> = Arb.positiveInt(max)
+val columnsArb: Arb<Int> = Arb.positiveInt(MAX)
 
 val spacingArb: Arb<Float> = Arb.positiveFloat()
 
-val canvasAndCellSizeArb: Arb<Pair<Size, Size>> = sizeArb.flatMap { canvasSize ->
-    sizeArb.map { canvasSize to it }
-}
+val canvasAndCellSizeArb: Arb<Pair<Size, Size>> =
+    sizeArb.flatMap { canvasSize ->
+        sizeArb.map { canvasSize to it }
+    }
