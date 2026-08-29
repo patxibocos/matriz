@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "io.github.patxibocos.matriz"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 21
