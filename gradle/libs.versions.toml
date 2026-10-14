@@ -1,5 +1,5 @@
 [versions]
-kotest = "6.2.5"
+kotest = "6.2.6"
 kotlin = "2.4.21"
 ktlint = "1.8.0"
 
